@@ -5,6 +5,7 @@ export type UserAttributes = {
   email: string;
   password: string;
   role: string;
+  isActive: boolean;
   createdAt?: Date;
 };
 

@@ -1,7 +1,7 @@
 export interface UserData {
-  userId: number;
-  userEmail: string;
-  userRole: string;
+  id: number;
+  email: string;
+  role: string;
   isActive: boolean;
   cartId: number;
 }

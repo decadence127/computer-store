@@ -72,7 +72,7 @@ User.hasOne(UserToken);
 UserToken.belongsTo(User);
 
 User.hasOne(Cart);
-Cart.belongsTo(Cart);
+Cart.belongsTo(User);
 
 User.hasMany(Rating);
 Rating.belongsTo(User);

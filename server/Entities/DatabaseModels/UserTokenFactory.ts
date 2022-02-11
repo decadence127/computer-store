@@ -3,6 +3,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 export type UserTokenAttributes = {
   id: number;
   refreshToken: string;
+  userId?: number;
 };
 
 export interface UserTokenModel

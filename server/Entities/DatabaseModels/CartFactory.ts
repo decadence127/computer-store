@@ -2,6 +2,7 @@ import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 
 export type CartAttributes = {
   id: number;
+  userId?: number;
 };
 
 export interface CartModel extends Model<CartAttributes>, CartAttributes {}
