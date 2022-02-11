@@ -1,4 +1,12 @@
-import sequelize, { Dialect } from "sequelize";
+import { RatingStatic } from "./../Entities/DatabaseModels/RatingFactory";
+import { DeviceTypeStatic } from "./../Entities/DatabaseModels/DeviceTypeFactory";
+import { DeviceBrandStatic } from "./../Entities/DatabaseModels/DeviceBrandFactory";
+import { UserTokenStatic } from "./../Entities/DatabaseModels/UserTokenFactory";
+import { CartDeviceStatic } from "./../Entities/DatabaseModels/CartDeviceFactory";
+import { DeviceStatic } from "./../Entities/DatabaseModels/DeviceFactory";
+import { CartStatic } from "./../Entities/DatabaseModels/CartFactory";
+import { UserStatic } from "./../Entities/DatabaseModels/UserFactory";
+import { Sequelize, Dialect } from "sequelize";
 
 import { DeviceBrandFactory } from "../Entities/DatabaseModels/DeviceBrandFactory";
 import { CartFactory } from "../Entities/DatabaseModels/CartFactory";
@@ -7,12 +15,32 @@ import { dbCredentials } from "../Utils/Constants/dbCredentials";
 import { DeviceTypeFactory } from "../Entities/DatabaseModels/DeviceTypeFactory";
 import { UserTokenFactory } from "../Entities/DatabaseModels/UserTokenFactory";
 import { DeviceFactory } from "../Entities/DatabaseModels/DeviceFactory";
-import { DeviceDescriptionFactory } from "../Entities/DatabaseModels/DeviceDescriptionFactory";
+import {
+  DeviceDescriptionFactory,
+  DeviceDescriptionStatic,
+} from "../Entities/DatabaseModels/DeviceDescriptionFactory";
 import { RatingFactory } from "../Entities/DatabaseModels/RatingFactory";
 import { CartDeviceFactory } from "../Entities/DatabaseModels/CartDeviceFactory";
-import { TypeBrandFactory } from "../Entities/DatabaseModels/TypeBrandFactory";
+import {
+  TypeBrandFactory,
+  TypeBrandStatic,
+} from "../Entities/DatabaseModels/TypeBrandFactory";
 
-export const dbConfig = new sequelize.Sequelize(
+export interface DB {
+  sequelize: Sequelize;
+  User: UserStatic;
+  Cart: CartStatic;
+  Device: DeviceStatic;
+  CartDevice: CartDeviceStatic;
+  UserToken: UserTokenStatic;
+  DeviceBrand: DeviceBrandStatic;
+  DeviceType: DeviceTypeStatic;
+  DeviceDesc: DeviceDescriptionStatic;
+  Rating: RatingStatic;
+  TypeBrand: TypeBrandStatic;
+}
+
+export const sequelize = new Sequelize(
   dbCredentials.name,
   dbCredentials.user,
   dbCredentials.password,
@@ -29,16 +57,16 @@ export const dbConfig = new sequelize.Sequelize(
   }
 );
 
-export const User = UserFactory(dbConfig);
-export const Cart = CartFactory(dbConfig);
-export const CartDevice = CartDeviceFactory(dbConfig);
-export const Device = DeviceFactory(dbConfig);
-export const UserToken = UserTokenFactory(dbConfig);
-export const DeviceBrand = DeviceBrandFactory(dbConfig);
-export const DeviceType = DeviceTypeFactory(dbConfig);
-export const DeviceDesc = DeviceDescriptionFactory(dbConfig);
-export const Rating = RatingFactory(dbConfig);
-export const TypeBrand = TypeBrandFactory(dbConfig);
+const User = UserFactory(sequelize);
+const Cart = CartFactory(sequelize);
+const CartDevice = CartDeviceFactory(sequelize);
+const Device = DeviceFactory(sequelize);
+const UserToken = UserTokenFactory(sequelize);
+const DeviceBrand = DeviceBrandFactory(sequelize);
+const DeviceType = DeviceTypeFactory(sequelize);
+const DeviceDesc = DeviceDescriptionFactory(sequelize);
+const Rating = RatingFactory(sequelize);
+const TypeBrand = TypeBrandFactory(sequelize);
 
 User.hasOne(UserToken);
 UserToken.belongsTo(User);
@@ -63,3 +91,17 @@ Rating.belongsTo(Device);
 
 DeviceType.belongsToMany(DeviceBrand, { through: TypeBrand });
 DeviceBrand.belongsToMany(DeviceType, { through: TypeBrand });
+
+export const db: DB = {
+  sequelize,
+  User,
+  Cart,
+  CartDevice,
+  Device,
+  UserToken,
+  DeviceBrand,
+  DeviceType,
+  DeviceDesc,
+  Rating,
+  TypeBrand,
+};
