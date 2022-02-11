@@ -1,4 +1,4 @@
-import { dbConfig } from "./dbConfig";
+import { sequelize } from "./dbConfig";
 import pg, { Pool } from "pg";
 import { dbCredentials } from "../Utils/Constants/dbCredentials";
 
@@ -22,20 +22,23 @@ export class PostgresContext {
 
     return dbList;
   }
+
   private async createDatabase(): Promise<void> {
     await this.connectionPool.query(`CREATE DATABASE "${dbCredentials.name}"`);
   }
+
   public static getInstance(): PostgresContext {
     return this.contextInstance || (this.contextInstance = new this());
   }
+
   async initialize(): Promise<void> {
     try {
       const dbList = await this.listAllDatabases();
       if (!dbList.includes(dbCredentials.name)) {
         await this.createDatabase();
       }
-      await dbConfig.authenticate();
-      await dbConfig.sync();
+      await sequelize.authenticate();
+      await sequelize.sync();
     } catch (e) {
       throw e;
     }
