@@ -20,6 +20,10 @@ export function RatingFactory(sequelize: Sequelize): RatingStatic {
       autoIncrement: true,
       primaryKey: true,
     },
+    rate: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
