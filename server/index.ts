@@ -1,11 +1,12 @@
 require("dotenv").config();
-import express, { Request, Response } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import path from "path";
 import { router } from "./Routes/Router";
-const app = express();
+import { PostgresContext } from "./Database/PostgresContext";
+const app: Application = express();
 const PORT = process.env.PORT;
 
 app.use(
@@ -21,7 +22,15 @@ app.use(fileUpload({}));
 app.use("/api", router);
 
 (async () => {
-  app.listen(PORT, () => {
-    console.log(`Server has been started on port: ${PORT}`);
-  });
+  try {
+    const dbContext = PostgresContext.getInstance();
+    await dbContext.initialize();
+
+    app.listen(PORT, () => {
+      console.log(`Server has been started on port: ${PORT}`);
+    });
+  } catch (error) {
+    console.error(error);
+    process.exit(-1);
+  }
 })();
